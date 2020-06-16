@@ -25,12 +25,17 @@ class Books extends Component {
         let booksArr = [];
         
         results.map(arr => {
-          booksArr.push({
-            "_id": arr.id,
-            "title": arr.volumeInfo.title, 
-            "author": arr.volumeInfo.authors, 
-            "link": arr.volumeInfo.cononicalVolumeLink
-        })
+
+          // if (arr.volumeInfo.imageLinks.smallThumbnail in arr && arr.volumeInfo.description in arr) {
+            booksArr.push({
+              "_id": arr.id,
+              "title": arr.volumeInfo.title, 
+              "author": arr.volumeInfo.authors, 
+              "link": arr.volumeInfo.cononicalVolumeLink,
+              // "imageLink": arr.volumeInfo.imageLinks.smallThumbnail
+            })
+        // }
+
       });
         //
         console.log(booksArr);
@@ -102,6 +107,7 @@ class Books extends Component {
               <List>
                 {this.state.books.map(book => (
                   <ListItem key={book._id}>
+                    <image src={book.imageLink}></image>
                     <a href={book.link} target="_blank" rel="noopener noreferrer">
                       <strong>
                         {book.title} by {book.author}
