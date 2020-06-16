@@ -25,15 +25,13 @@ class Books extends Component {
         let booksArr = [];
         
         results.map(arr => {
-          if (arr.saleInfo.saleability !== "NOT_FOR_SALE") {
           booksArr.push({
             "_id": arr.id,
             "title": arr.volumeInfo.title, 
-            "author": arr.volumeInfo.authors[0], 
-            "link": arr.saleInfo.buyLink
-        })}
-      }
-        );
+            "author": arr.volumeInfo.authors, 
+            "link": arr.volumeInfo.cononicalVolumeLink
+        })
+      });
         //
         console.log(booksArr);
         //

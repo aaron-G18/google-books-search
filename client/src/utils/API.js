@@ -8,7 +8,7 @@ export default {
 
   //test
   googleBooks: function (search) {
-    let query = "https://www.googleapis.com/books/v1/volumes?q=" + search + "&api_key=" + apiKey;
+    let query = "https://www.googleapis.com/books/v1/volumes?q=" + search + "&maxResults=30&printType=books&api_key=" + apiKey;
     return axios.get(query)
   },
 
