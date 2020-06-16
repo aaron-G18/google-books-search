@@ -2,17 +2,14 @@ import React, { Component } from "react";
 import DeleteBtn from "../components/DeleteBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
-import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
-import { Input, TextArea, FormBtn } from "../components/Form";
+import { Input, FormBtn } from "../components/Form";
 
 class Books extends Component {
   state = {
     books: [],
-    title: "",
-    author: "",
-    synopsis: ""
+    title: ""
   };
 
   componentDidMount() {
@@ -20,9 +17,28 @@ class Books extends Component {
   }
 
 // test
-  googleBooks = () => {
-    API.googleBooks("choke")
-      .then (res => console.log(res.data))
+  googleBooks = (search) => {
+    API.googleBooks(search)
+      .then (res => {
+        console.log(res.data.items);
+        let results = res.data.items;
+        let booksArr = [];
+        
+        results.map(arr => {
+          if (arr.saleInfo.saleability !== "NOT_FOR_SALE") {
+          booksArr.push({
+            "_id": arr.id,
+            "title": arr.volumeInfo.title, 
+            "author": arr.volumeInfo.authors[0], 
+            "link": arr.saleInfo.buyLink
+        })}
+      }
+        );
+        //
+        console.log(booksArr);
+        //
+        this.setState({ books: booksArr, title: "" })
+      })
       .catch(err => console.log(err));
   };
 // test
@@ -31,7 +47,7 @@ class Books extends Component {
   loadBooks = () => {
     API.getBooks()
       .then(res =>
-        this.setState({ books: res.data, title: "", author: "", synopsis: "" })
+        this.setState({ books: res.data, title: "" })
       )
       .catch(err => console.log(err));
   };
@@ -51,16 +67,10 @@ class Books extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    // if (this.state.title && this.state.author) {
-    //   API.saveBook({
-    //     title: this.state.title,
-    //     author: this.state.author,
-    //     synopsis: this.state.synopsis
-    //   })
-    //     .then(res => this.loadBooks())
-    //     .catch(err => console.log(err));
-    // }
-    this.googleBooks();
+    if (this.state.title) {
+      this.googleBooks(this.state.title)
+    }
+    
   };
 
   render() {
@@ -78,23 +88,11 @@ class Books extends Component {
                 name="title"
                 placeholder="Title (required)"
               />
-              <Input
-                value={this.state.author}
-                onChange={this.handleInputChange}
-                name="author"
-                placeholder="Author (required)"
-              />
-              <TextArea
-                value={this.state.synopsis}
-                onChange={this.handleInputChange}
-                name="synopsis"
-                placeholder="Synopsis (Optional)"
-              />
               <FormBtn
-                disabled={!(this.state.author && this.state.title)}
+                disabled={!(this.state.title)}
                 onClick={this.handleFormSubmit}
               >
-                Submit Book
+                Search Google Books
               </FormBtn>
             </form>
           </Col>
@@ -106,11 +104,11 @@ class Books extends Component {
               <List>
                 {this.state.books.map(book => (
                   <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
+                    <a href={book.link} target="_blank" rel="noopener noreferrer">
                       <strong>
                         {book.title} by {book.author}
                       </strong>
-                    </Link>
+                    </a>
                     <DeleteBtn onClick={() => this.deleteBook(book._id)} />
                   </ListItem>
                 ))}

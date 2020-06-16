@@ -1,5 +1,4 @@
 import axios from "axios";
-// import keys from "../keys.js";
 require("dotenv").config();
 
 const apiKey = process.env.GOOGLE_BOOKS;
@@ -9,7 +8,7 @@ export default {
 
   //test
   googleBooks: function (search) {
-    let query = "https://www.googleapis.com/books/v1/volumes?q=" + search +"&api_key=" + apiKey;
+    let query = "https://www.googleapis.com/books/v1/volumes?q=" + search + "&api_key=" + apiKey;
     return axios.get(query)
   },
 
