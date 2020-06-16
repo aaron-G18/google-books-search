@@ -19,6 +19,15 @@ class Books extends Component {
     this.loadBooks();
   }
 
+// test
+  googleBooks = () => {
+    API.googleBooks("choke")
+      .then (res => console.log(res.data))
+      .catch(err => console.log(err));
+  };
+// test
+
+
   loadBooks = () => {
     API.getBooks()
       .then(res =>
@@ -42,15 +51,16 @@ class Books extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
-    }
+    // if (this.state.title && this.state.author) {
+    //   API.saveBook({
+    //     title: this.state.title,
+    //     author: this.state.author,
+    //     synopsis: this.state.synopsis
+    //   })
+    //     .then(res => this.loadBooks())
+    //     .catch(err => console.log(err));
+    // }
+    this.googleBooks();
   };
 
   render() {
