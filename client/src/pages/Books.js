@@ -12,20 +12,18 @@ class Books extends Component {
     title: ""
   };
 
-  componentDidMount() {
-    this.loadBooks();
-  }
+  // componentDidMount() {
+  //   this.loadBooks();
+  // }
 
-// test
+
   googleBooks = (search) => {
     API.googleBooks(search)
       .then (res => {
         console.log(res.data.items);
         let results = res.data.items;
         let booksArr = [];
-        
         results.map(arr => {
-
           if (arr.volumeInfo.imageLinks !== undefined && arr.volumeInfo.description !== undefined && arr.volumeInfo.authors !== undefined) {
             booksArr.push({
               "bookId": arr.id,
@@ -36,7 +34,6 @@ class Books extends Component {
               "description": arr.volumeInfo.description
             })
         }
-
       });
         //
         console.log(booksArr);
@@ -125,7 +122,7 @@ class Books extends Component {
                   <ListItem key={book.bookId}>
                     <Row>
                     <Col size="md-2">
-                      <img src={book.imageLink}></img>
+                      <img src={book.imageLink} alt={`cover for ${book.title}`}></img>
                     </Col>
                     <Col size="md-8">
                     <a href={book.link} target="_blank" rel="noopener noreferrer">
@@ -139,13 +136,15 @@ class Books extends Component {
                     <p>{book.description}</p>
                     </Col>
                     <Col size="md-2">
-                    <a href={book.link} target="_blank" rel="noopener noreferrer"><FormBtn>View</FormBtn></a>
+                      <div>
+                    <a href={book.link} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", marginLeft: 5}}><FormBtn>View</FormBtn></a>
                     <FormBtn
                     id={book.bookId}
                     onClick={this.handleSaveClick}
                     >
                       Save
                     </FormBtn>
+                    </div>
                     </Col>
                     </Row>
                   </ListItem>
