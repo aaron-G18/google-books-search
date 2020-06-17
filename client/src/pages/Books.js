@@ -121,13 +121,24 @@ class Books extends Component {
             {this.state.books.length ? (
               <List>
                 {this.state.books.map(book => (
-                  <ListItem key={book._id}>
-                    <image src={book.imageLink}></image>
+                  
+                  <ListItem key={book.bookId}>
+                    <Row>
+                    <Col size="md-2">
+                      <img src={book.imageLink}></img>
+                    </Col>
+                    <Col size="md-8">
                     <a href={book.link} target="_blank" rel="noopener noreferrer">
                       <strong>
-                        {book.title} by {book.author}
+                        <h3>Title: {book.title}</h3>
                       </strong>
                     </a>
+                    <p>Author: {book.author}</p>
+                    <br />
+                    <p>Description:</p>
+                    <p>{book.description}</p>
+                    </Col>
+                    <Col size="md-2">
                     <a href={book.link} target="_blank" rel="noopener noreferrer"><FormBtn>View</FormBtn></a>
                     <FormBtn
                     id={book.bookId}
@@ -135,7 +146,10 @@ class Books extends Component {
                     >
                       Save
                     </FormBtn>
+                    </Col>
+                    </Row>
                   </ListItem>
+                  
                 ))}
               </List>
             ) : (
