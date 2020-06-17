@@ -6,7 +6,7 @@ const apiKey = process.env.GOOGLE_BOOKS;
 
 export default {
 
-  //test
+  // Builds the query string and sends query to Google Books API 
   googleBooks: function (search) {
     let query = "https://www.googleapis.com/books/v1/volumes?q=" + search + "&maxResults=30&printType=books&api_key=" + apiKey;
     return axios.get(query)
@@ -16,10 +16,7 @@ export default {
   getBooks: function () {
     return axios.get("/api/books");
   },
-  // Gets the book with the given id
-  getBook: function (id) {
-    return axios.get("/api/books/" + id);
-  },
+  
   // Deletes the book with the given id
   deleteBook: function (id) {
     return axios.delete("/api/books/" + id);

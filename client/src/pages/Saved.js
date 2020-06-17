@@ -10,21 +10,22 @@ class Saved extends Component {
   state = {
     books: []
   };
-  // When this component mounts, grab the book with the _id of this.props.match.params.id
-  // e.g. localhost:3000/books/599dcb67f0f16317844583fc
+  
+  // When component mounts, call loadBooks function.
   componentDidMount() {
     this.loadBooks();
   };
 
+  // Function to grab all the books from the DB and update the books array in state to update the DOM.
   loadBooks = () => {
     API.getBooks()
       .then(res =>
-        this.setState({ books: res.data, title: "" })
+        this.setState({ books: res.data })
       )
       .catch(err => console.log(err));
   };
 
-
+  // function for event handler when a delete button is clicke on a book to delete that book from the DB.
   deleteBook = event => {
     event.preventDefault();
     let book = event.target.id;
@@ -49,45 +50,43 @@ class Saved extends Component {
         </Row>
         <Row>
           <Col size="md-10 md-offset-1">
-          <div>
+            <div>
               <h1>Results</h1>
-            {this.state.books.length ? (
+              {this.state.books.length ? (
               <List>
                 {this.state.books.map(book => (
-                  
                   <ListItem key={book.bookId}>
                     <Row>
-                    <Col size="md-2">
-                      <img src={book.imageLink} alt={`cover for ${book.title}`}></img>
-                    </Col>
-                    <Col size="md-8">
-                    <a href={book.link} target="_blank" rel="noopener noreferrer">
-                      <strong>
-                        <h3>Title: {book.title}</h3>
-                      </strong>
-                    </a>
-                    <p>Author: {book.author}</p>
-                    <br />
-                    <p>Description:</p>
-                    <p>{book.description}</p>
-                    </Col>
-                    <Col size="md-2">
-                    <a href={book.link} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", marginLeft: 5}}><FormBtn>View</FormBtn></a>
-                    <FormBtn
-                    id={book._id}
-                    onClick={this.deleteBook}
-                    >
-                      Delete
-                    </FormBtn>
-                    </Col>
+                      <Col size="md-2">
+                        <img src={book.imageLink} alt={`cover for ${book.title}`}></img>
+                      </Col>
+                      <Col size="md-8">
+                        <a href={book.link} target="_blank" rel="noopener noreferrer">
+                          <strong>
+                            <h3>Title: {book.title}</h3>
+                          </strong>
+                        </a>
+                        <p>Author: {book.author}</p>
+                        <br />
+                        <p>Description:</p>
+                        <p>{book.description}</p>
+                      </Col>
+                      <Col size="md-2">
+                        <a href={book.link} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", marginLeft: 5 }}><FormBtn>View</FormBtn></a>
+                        <FormBtn
+                          id={book._id}
+                          onClick={this.deleteBook} 
+                        >
+                        Delete
+                        </FormBtn>
+                      </Col>
                     </Row>
                   </ListItem>
-                  
                 ))}
               </List>
-            ) : (
+              ) : (
               <h3>No Results to Display</h3>
-            )}
+              )}
             </div>
           </Col>
         </Row>

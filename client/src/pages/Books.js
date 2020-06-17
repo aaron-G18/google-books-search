@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-// import DeleteBtn from "../components/DeleteBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Col, Row, Container } from "../components/Grid";
@@ -12,15 +11,10 @@ class Books extends Component {
     title: ""
   };
 
-  // componentDidMount() {
-  //   this.loadBooks();
-  // }
-
-
+  // function for the query to Google Books API and to transform the result into an array of book objects with only the properties needed.
   googleBooks = (search) => {
     API.googleBooks(search)
       .then (res => {
-        console.log(res.data.items);
         let results = res.data.items;
         let booksArr = [];
         results.map(arr => {
@@ -34,31 +28,14 @@ class Books extends Component {
               "description": arr.volumeInfo.description
             })
         }
+        return booksArr;
       });
-        //
-        console.log(booksArr);
-        //
         this.setState({ books: booksArr, title: "" })
       })
       .catch(err => console.log(err));
   };
-// test
 
-
-  loadBooks = () => {
-    API.getBooks()
-      .then(res =>
-        this.setState({ books: res.data, title: "" })
-      )
-      .catch(err => console.log(err));
-  };
-
-  deleteBook = id => {
-    API.deleteBook(id)
-      .then(res => this.loadBooks())
-      .catch(err => console.log(err));
-  };
-
+  // function to handle updating state when text is typed in the input field.
   handleInputChange = event => {
     const { name, value } = event.target;
     this.setState({
@@ -66,6 +43,7 @@ class Books extends Component {
     });
   };
 
+  // function for event handler when the search button is submitted and call the API query function "googleBooks."
   handleFormSubmit = event => {
     event.preventDefault();
     if (this.state.title) {
@@ -73,6 +51,7 @@ class Books extends Component {
     }
   };
 
+  // function for event handler when the save button is clicked for a listed book to save that book to the DB.
   handleSaveClick = event => {
     event.preventDefault();
     let book = this.state.books.find(element => element.bookId === event.target.id);
@@ -82,8 +61,8 @@ class Books extends Component {
       )
         .then(alert("Book Saved"))
         .catch(err => console.log(err));
-    
   };
+
 
   render() {
     return (
@@ -115,44 +94,42 @@ class Books extends Component {
           <Col size="md-12">
             <div>
               <h1>Results</h1>
-            {this.state.books.length ? (
+              {this.state.books.length ? (
               <List>
                 {this.state.books.map(book => (
-                  
                   <ListItem key={book.bookId}>
                     <Row>
-                    <Col size="md-2">
-                      <img src={book.imageLink} alt={`cover for ${book.title}`}></img>
-                    </Col>
-                    <Col size="md-8">
-                    <a href={book.link} target="_blank" rel="noopener noreferrer">
-                      <strong>
-                        <h3>Title: {book.title}</h3>
-                      </strong>
-                    </a>
-                    <p>Author: {book.author}</p>
-                    <br />
-                    <p>Description:</p>
-                    <p>{book.description}</p>
-                    </Col>
-                    <Col size="md-2">
-                      <div>
-                    <a href={book.link} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", marginLeft: 5}}><FormBtn>View</FormBtn></a>
-                    <FormBtn
-                    id={book.bookId}
-                    onClick={this.handleSaveClick}
-                    >
-                      Save
-                    </FormBtn>
-                    </div>
-                    </Col>
+                      <Col size="md-2">
+                        <img src={book.imageLink} alt={`cover for ${book.title}`}></img>
+                      </Col>
+                      <Col size="md-8">
+                        <a href={book.link} target="_blank" rel="noopener noreferrer">
+                        <strong>
+                          <h3>Title: {book.title}</h3>
+                        </strong>
+                        </a>
+                        <p>Author: {book.author}</p>
+                        <br />
+                        <p>Description:</p>
+                        <p>{book.description}</p>
+                      </Col>
+                      <Col size="md-2">
+                        <div>
+                          <a href={book.link} target="_blank" rel="noopener noreferrer" style={{ display: "inline-block", marginLeft: 5}}><FormBtn>View</FormBtn></a>
+                          <FormBtn
+                            id={book.bookId}
+                            onClick={this.handleSaveClick}
+                            >Save
+                          </FormBtn>
+                        </div>
+                      </Col>
                     </Row>
                   </ListItem>
                   
                 ))}
               </List>
             ) : (
-              <h3>No Results to Display</h3>
+              <h3>No results to display. Enter search above.</h3>
             )}
             </div>
           </Col>
