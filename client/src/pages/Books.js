@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import DeleteBtn from "../components/DeleteBtn";
+// import DeleteBtn from "../components/DeleteBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Col, Row, Container } from "../components/Grid";
@@ -26,15 +26,16 @@ class Books extends Component {
         
         results.map(arr => {
 
-          // if (arr.volumeInfo.imageLinks.smallThumbnail in arr && arr.volumeInfo.description in arr) {
+          if (arr.volumeInfo.imageLinks !== undefined && arr.volumeInfo.description !== undefined && arr.volumeInfo.authors !== undefined) {
             booksArr.push({
-              "_id": arr.id,
+              "bookId": arr.id,
               "title": arr.volumeInfo.title, 
-              "author": arr.volumeInfo.authors, 
-              "link": arr.volumeInfo.cononicalVolumeLink,
-              // "imageLink": arr.volumeInfo.imageLinks.smallThumbnail
+              "author": arr.volumeInfo.authors[0], 
+              "link": arr.volumeInfo.canonicalVolumeLink,
+              "imageLink": arr.volumeInfo.imageLinks.smallThumbnail,
+              "description": arr.volumeInfo.description
             })
-        // }
+        }
 
       });
         //
@@ -73,6 +74,17 @@ class Books extends Component {
     if (this.state.title) {
       this.googleBooks(this.state.title)
     }
+  };
+
+  handleSaveClick = event => {
+    event.preventDefault();
+    let book = this.state.books.find(element => element.bookId === event.target.id);
+    console.log(book);
+    API.saveBook(
+        book
+      )
+        .then(alert("Book Saved"))
+        .catch(err => console.log(err));
     
   };
 
@@ -80,29 +92,32 @@ class Books extends Component {
     return (
       <Container fluid>
         <Row>
-          <Col size="md-6">
+          <Col size="md-12">
             <Jumbotron>
-              <h1>What Books Should I Read?</h1>
+              <h1>(React) Google Books Search</h1>
+              <p>Search for and save books of interest</p>
             </Jumbotron>
-            <form>
-              <Input
-                value={this.state.title}
-                onChange={this.handleInputChange}
-                name="title"
-                placeholder="Title (required)"
-              />
-              <FormBtn
-                disabled={!(this.state.title)}
-                onClick={this.handleFormSubmit}
-              >
-                Search Google Books
-              </FormBtn>
-            </form>
+            <Jumbotron>
+              <form>
+                <h3 style={{textAlign: "left", marginTop: 15}}>Book Search</h3>
+                <Input
+                  value={this.state.title}
+                  onChange={this.handleInputChange}
+                  name="title"
+                  placeholder="Title, or key word (required)"
+                />
+                <FormBtn
+                  disabled={!(this.state.title)}
+                  onClick={this.handleFormSubmit}
+                >
+                  Search Google Books
+                </FormBtn>
+              </form>
+            </Jumbotron>
           </Col>
-          <Col size="md-6 sm-12">
-            <Jumbotron>
-              <h1>Books On My List</h1>
-            </Jumbotron>
+          <Col size="md-12">
+            <div>
+              <h1>Results</h1>
             {this.state.books.length ? (
               <List>
                 {this.state.books.map(book => (
@@ -113,13 +128,20 @@ class Books extends Component {
                         {book.title} by {book.author}
                       </strong>
                     </a>
-                    <DeleteBtn onClick={() => this.deleteBook(book._id)} />
+                    <a href={book.link} target="_blank" rel="noopener noreferrer"><FormBtn>View</FormBtn></a>
+                    <FormBtn
+                    id={book.bookId}
+                    onClick={this.handleSaveClick}
+                    >
+                      Save
+                    </FormBtn>
                   </ListItem>
                 ))}
               </List>
             ) : (
               <h3>No Results to Display</h3>
             )}
+            </div>
           </Col>
         </Row>
       </Container>
