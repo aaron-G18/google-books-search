@@ -6,7 +6,7 @@ This app is a "search engine" that interacts with Google's Google Books API to s
 
 Here is a link to the deployed site on heroku:
 
-[Aaron's Memory Game](https://aaron-g18.github.io/memory-game/)
+[Aaron's Google Books Search](https://ag-google-books-search.herokuapp.com/)
 
 ---
 
